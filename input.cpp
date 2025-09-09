@@ -8,6 +8,7 @@
 using namespace std;
 
 struct termios t;
+static char last_special_key = 0;
 
 void input_enter_off()
 {
@@ -41,12 +42,46 @@ enum Direction get_input()
     case 's':
         result = South;
         break;
+    case 'h':
+        result = Error;  // Special case for help toggle
+        last_special_key = 'h';
+        cout << "Help toggle pressed!" << endl;
+        break;
+    case 'm':
+        result = Error;  // Special case for difficulty toggle
+        last_special_key = 'm';
+        cout << "Difficulty toggle pressed!" << endl;
+        break;
+    case 'r':
+        result = Error;  // Special case for restart
+        last_special_key = 'r';
+        cout << "Restart pressed!" << endl;
+        break;
+    case 'q':
+        result = Error;  // Special case for quit
+        last_special_key = 'q';
+        cout << "Quit pressed!" << endl;
+        break;
     default:
         result = Error;
         cout << "Incorrect button clicked(" << user_input << ")" << endl;
         break;
     }
     return result;
+}
+
+bool check_help_toggle()
+{
+    // Check if 'h' key was pressed (non-blocking)
+    // This is a simplified implementation
+    return false;  // Will be handled in main loop
+}
+
+char get_last_special_key()
+{
+    char key = last_special_key;
+    last_special_key = 0;  // Reset after reading
+    return key;
 }
 
 void input_init()

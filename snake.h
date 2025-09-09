@@ -25,6 +25,8 @@ public:
   bool food_eaten;
   bool is_dead;
   int length;
+  bool was_last_input_error();
+  void restart_game();
 
 private:
   pthread_t input_thread;

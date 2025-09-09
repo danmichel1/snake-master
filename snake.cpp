@@ -153,3 +153,23 @@ void Snake::initialize_snake(void)
     }
     snake_head = snake_parts[snake_parts.size() - 1];
 }
+
+bool Snake::was_last_input_error(void)
+{
+    return next_direction == Error;
+}
+
+void Snake::restart_game(void)
+{
+    // Reset all game state
+    direction = East;
+    next_direction = direction;
+    food_eaten = false;
+    is_dead = false;
+    length = INITIAL_SNAKE_LENGTH;
+    
+    // Clear and reinitialize snake
+    snake_parts.clear();
+    clear_snake_world();
+    initialize_snake();
+}

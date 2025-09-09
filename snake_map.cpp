@@ -15,6 +15,8 @@ using namespace std;
 SnakeMap::SnakeMap(Snake *snake)
 {
     this->snake = snake;
+    this->help_mode_enabled = true;  // Start with help mode ON
+    this->difficulty_mode = 0;       // Start with Easy mode (0=Easy, 1=Medium, 2=Hard)
     clear_map(this->map_array);
     srand(time(NULL));
     update_snake_food(true);
@@ -72,6 +74,9 @@ void SnakeMap::compute_helper_path()
 {
     helper_path.clear();
 
+    // Don't compute path if help mode is disabled
+    if (!help_mode_enabled) return;
+
     // Limit to first N apples eaten
     int apples_eaten = snake->length - INITIAL_SNAKE_LENGTH;
     if (apples_eaten > HELP_MAX_N) return;
@@ -100,12 +105,14 @@ void SnakeMap::redraw(void)
     update_snake_food(false);
     map_array[snake_food.first][snake_food.second] = SNAKE_FOOD_CHAR;
     
-    // draw helper path as '+' without overwriting snake body/head or food
-    for (auto &p : helper_path) {
-        int i = p.first, j = p.second;
-        if (i < 0 || i >= MAP_HEIGHT || j < 0 || j >= MAP_WIDTH) continue;
-        if (map_array[i][j] == MAP_CHAR) {
-            map_array[i][j] = HELP_PATH_CHAR;
+    // draw helper path as 'o' without overwriting snake body/head or food
+    if (help_mode_enabled) {
+        for (auto &p : helper_path) {
+            int i = p.first, j = p.second;
+            if (i < 0 || i >= MAP_HEIGHT || j < 0 || j >= MAP_WIDTH) continue;
+            if (map_array[i][j] == MAP_CHAR) {
+                map_array[i][j] = HELP_PATH_CHAR;
+            }
         }
     }
     
@@ -113,7 +120,13 @@ void SnakeMap::redraw(void)
     {
         for (int j = 0; j < MAP_WIDTH; j++)
         {
-            cout << map_array[i][j] << " ";
+            if (map_array[i][j] == HELP_PATH_CHAR) {
+                cout << "\033[32m" << map_array[i][j] << "\033[0m ";  // Green
+            } else if (map_array[i][j] == SNAKE_FOOD_CHAR) {
+                cout << "\033[31m" << map_array[i][j] << "\033[0m ";  // Red
+            } else {
+                cout << map_array[i][j] << " ";
+            }
         }
         cout << endl;
     }
@@ -176,5 +189,57 @@ void update_snake_head(char map_array[MAP_HEIGHT][MAP_WIDTH], Snake *snake)
 
 void SnakeMap::update_score(void)
 {
-    cout << "Score:" << snake->length << endl;
+    cout << "Score:" << snake->length;
+    if (help_mode_enabled) {
+        cout << " [HELP ON]";
+    } else {
+        cout << " [HELP OFF]";
+    }
+    
+    // Show difficulty mode
+    switch (difficulty_mode) {
+        case 0: cout << " [EASY]"; break;
+        case 1: cout << " [MEDIUM]"; break;
+        case 2: cout << " [HARD]"; break;
+    }
+    cout << endl;
+}
+
+void SnakeMap::toggle_help_mode()
+{
+    help_mode_enabled = !help_mode_enabled;
+    if (!help_mode_enabled) {
+        helper_path.clear();  // Clear any existing path when turning off
+    } else {
+        // When turning help mode back on, recompute the path
+        compute_helper_path();
+    }
+}
+
+void SnakeMap::cycle_difficulty_mode()
+{
+    difficulty_mode = (difficulty_mode + 1) % 3;  // Cycle through 0, 1, 2
+}
+
+int SnakeMap::get_current_pause_length()
+{
+    switch (difficulty_mode) {
+        case 0: return PAUSE_EASY;    // 200ms
+        case 1: return PAUSE_MEDIUM;  // 150ms
+        case 2: return PAUSE_HARD;    // 100ms
+        default: return PAUSE_EASY;
+    }
+}
+
+void SnakeMap::restart_game()
+{
+    // Reset map state
+    clear_map(this->map_array);
+    helper_path.clear();
+    
+    // Reset snake
+    snake->restart_game();
+    
+    // Generate new food
+    update_snake_food(true);
 }

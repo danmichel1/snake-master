@@ -14,9 +14,17 @@ public:
   std::pair<int, int> snake_food;
   void update_snake_food(bool force_update);
   void update_score();
+  void toggle_help_mode();
+  void cycle_difficulty_mode();
+  int get_current_pause_length();
+  void restart_game();
 
   // --- Help Me Win: cached path to draw
   std::vector<std::pair<int,int>> helper_path;
+  bool help_mode_enabled;
+  
+  // --- Difficulty mode settings
+  int difficulty_mode;  // 0=Easy, 1=Medium, 2=Hard
 
 private:
   char map_array[MAP_HEIGHT][MAP_WIDTH];
