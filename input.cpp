@@ -1,7 +1,7 @@
 #include "input.h"
 #include <termios.h>
 #include <unistd.h>
-#include <bits/stdc++.h>
+#include <iostream>
 #include <string>
 #include <stdio.h>
 
