@@ -16,4 +16,8 @@
 
 #define PAUSE_LENGTH 1000 * 200 // 200 milliseconds
 
+// --- Help Me Win mode settings ---
+#define HELP_PATH_CHAR '+'
+#define HELP_MAX_N 5   // show helper path for first N apples eaten
+
 #endif
