@@ -14,5 +14,7 @@ void input_init(void);
 void input_enter_off(void);
 void input_enter_on(void);
 enum Direction get_input(void);
+bool check_help_toggle(void);
+char get_last_special_key(void);
 
 #endif

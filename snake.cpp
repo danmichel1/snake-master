@@ -60,6 +60,7 @@ void Snake::update_direction(enum Direction direction)
             this->direction = direction;
         }
         break;
+    case Error: break;
     }
     sem_post(&this->snake_sema);
 }
@@ -104,6 +105,7 @@ void Snake::update_movement(void)
     case South:
         movement_part = make_pair(snake_head.first + 1, snake_head.second);
         break;
+    case Error: break;
     }
     snake_head = movement_part;
     snake_parts.push_back(movement_part);
@@ -150,4 +152,24 @@ void Snake::initialize_snake(void)
         snake_world_array[snake_part.first][snake_part.second] = 1;
     }
     snake_head = snake_parts[snake_parts.size() - 1];
+}
+
+bool Snake::was_last_input_error(void)
+{
+    return next_direction == Error;
+}
+
+void Snake::restart_game(void)
+{
+    // Reset all game state
+    direction = East;
+    next_direction = direction;
+    food_eaten = false;
+    is_dead = false;
+    length = INITIAL_SNAKE_LENGTH;
+    
+    // Clear and reinitialize snake
+    snake_parts.clear();
+    clear_snake_world();
+    initialize_snake();
 }

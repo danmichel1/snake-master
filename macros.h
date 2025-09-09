@@ -16,4 +16,15 @@
 
 #define PAUSE_LENGTH 1000 * 200 // 200 milliseconds
 
+// --- Help Me Win mode settings ---
+#define HELP_PATH_CHAR 'o'
+#define HELP_MAX_N 15   // show helper path for first N apples eaten
+#define HELP_TOGGLE_KEY 'h'  // press 'h' to toggle help mode on/off
+
+// --- Difficulty mode settings ---
+#define DIFFICULTY_TOGGLE_KEY 'm'  // press 'm' to cycle through difficulty modes
+#define PAUSE_EASY 1000 * 200      // 200ms (current speed)
+#define PAUSE_MEDIUM 1000 * 150    // 150ms (faster)
+#define PAUSE_HARD 1000 * 100      // 100ms (much faster)
+
 #endif
