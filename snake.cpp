@@ -60,6 +60,7 @@ void Snake::update_direction(enum Direction direction)
             this->direction = direction;
         }
         break;
+    case Error: break;
     }
     sem_post(&this->snake_sema);
 }
@@ -104,6 +105,7 @@ void Snake::update_movement(void)
     case South:
         movement_part = make_pair(snake_head.first + 1, snake_head.second);
         break;
+    case Error: break;
     }
     snake_head = movement_part;
     snake_parts.push_back(movement_part);
